@@ -30,7 +30,7 @@
                                 <li class="cart-icon">
                                     Keranjang Belanja &nbsp;
                                     <a href="#">
-                                        <i class="icon_bag_alt"></i>
+                                        <i class="icon_bag_alt ml-2"></i>
                                         <span>3</span>
                                     </a>
                                     <div class="cart-hover">
