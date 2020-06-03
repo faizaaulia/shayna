@@ -31,40 +31,29 @@
                                     Keranjang Belanja &nbsp;
                                     <a href="#">
                                         <i class="icon_bag_alt ml-2"></i>
-                                        <span>3</span>
+                                        <span>{{ userCart.length }}</span>
                                     </a>
                                     <div class="cart-hover">
                                         <div class="select-items">
                                             <table>
-                                                <tbody>
-                                                    <tr>
+                                                <tbody v-if="userCart.length > 0">
+                                                    <tr v-for="cart in userCart" :key="cart.id">
                                                         <td class="si-pic">
-                                                            <img src="img/select-product-1.jpg" alt="" />
+                                                            <img class="photo-item" :src="cart.photo" alt="" />
                                                         </td>
                                                         <td class="si-text">
                                                             <div class="product-selected">
-                                                                <p>$60.00 x 1</p>
-                                                                <h6>Kabino Bedside Table</h6>
+                                                                <p>${{ cart.price }} x 1</p>
+                                                                <h6>{{ cart.name }}</h6>
                                                             </div>
                                                         </td>
-                                                        <td class="si-close">
+                                                        <td class="si-close" @click="removeItem(userCart.index)">
                                                             <i class="ti-close"></i>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="si-pic">
-                                                            <img src="img/select-product-2.jpg" alt="" />
-                                                        </td>
-                                                        <td class="si-text">
-                                                            <div class="product-selected">
-                                                                <p>$60.00 x 1</p>
-                                                                <h6>Kabino Bedside Table</h6>
-                                                            </div>
-                                                        </td>
-                                                        <td class="si-close">
-                                                            <i class="ti-close"></i>
-                                                        </td>
-                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                    <tr>Keranjang Masih Kosong</tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -90,6 +79,35 @@
 
 <script>
 export default {
-    name: 'HeaderShayna'
+    name: 'HeaderShayna',
+    data() {
+        return {
+            userCart: []
+        }
+    },
+    methods: {
+        removeItem(idx) {
+            this.userCart.splice(idx, 1);
+            // save newest cart
+            const parsed = JSON.stringify(this.userCart);
+            localStorage.setItem('userCart', parsed);
+        }
+    },
+    mounted() {
+        if (localStorage.getItem('userCart')) {
+            try {
+                this.userCart = JSON.parse(localStorage.getItem('userCart'));
+            } catch (error) {
+                localStorage.removeItem('userCart');
+            }
+        }
+    },
 }
 </script>
+
+<style scoped>
+    .photo-item {
+        width: 80px;
+        height: 80px;
+    }
+</style>

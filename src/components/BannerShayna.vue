@@ -10,9 +10,11 @@
                                 <div class="pi-pic">
                                     <img v-bind:src="itemProduct.galleries[0].photo" alt="" />
                                     <ul>
-                                        <li class="w-icon active">
-                                            <a href="#"><i class="icon_bag_alt"></i></a>
-                                        </li>
+                                        <router-link to="/cart">
+                                            <li class="w-icon active" @click="saveCart(itemProduct.id, itemProduct.name, itemProduct.galleries[0].photo, itemProduct.price)">
+                                                <a href="#"><i class="icon_bag_alt"></i></a>
+                                            </li>
+                                        </router-link>
                                         <li class="quick-view">
                                             <router-link v-bind:to="'/product/' + itemProduct.id">+ Quick View</router-link>
                                         </li>
@@ -51,10 +53,31 @@ export default {
     },
     data() {
         return {
-            products: []
+            products: [],
+            userCart: []
         };
     },
+    methods: {
+        saveCart(idProduct, name, photo, price) {
+            var productAdded = {
+                'id': idProduct,
+                'name': name,
+                'photo': photo,
+                'price': price
+            }
+            this.userCart.push(productAdded);
+            const parsed = JSON.stringify(this.userCart);
+            localStorage.setItem('userCart', parsed);
+        }
+    },
     mounted() {
+        if (localStorage.getItem('userCart')) {
+            try {
+                this.userCart = JSON.parse(localStorage.getItem('userCart'));
+            } catch (error) {
+                localStorage.removeItem('userCart');
+            }
+        }
         axios
             .get('http://larashop.site/api/products')
             .then(res => (this.products = res.data.data.data))

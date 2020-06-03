@@ -26,10 +26,10 @@
                                 <div class="product-pic-zoom">
                                     <img class="product-big-img" :src='default_img' alt="" />
                                 </div>
-                                <div class="product-thumbs" v-if="thumbs.length > 0">
+                                <div class="product-thumbs" v-if="detailProduct.galleries.length > 0">
                                     <carousel class="product-thumbs-track ps-slider" :nav='false' :dots='false'>
-                                        <div class="pt" v-for="thumb in thumbs" :key="thumb.id" @click="changeImage(thumb.photo)" :class="thumb.photo == default_img ? 'active' : ''">
-                                            <img :src="thumb.photo" alt="" />
+                                        <div class="pt" v-for="thumb in detailProduct.galleries" :key="thumb.id" @click="changeImage(thumb.photo)" :class="thumb.photo == default_img ? 'active' : ''">
+                                            <img :src="thumb.photo" :alt="detailProduct.slug" />
                                         </div>
                                     </carousel>
                                 </div>
@@ -41,12 +41,12 @@
                                         <h3>{{ detailProduct.name }}</h3>
                                     </div>
                                     <div class="pd-desc">
-                                        <p> {{ detailProduct.description }} </p>
+                                        <p v-html="detailProduct.description"></p>
                                         <h4>${{ detailProduct.price }}</h4>
                                     </div>
                                     <div class="quantity">
                                         <router-link to="/cart">
-                                            <a href="#" class="primary-btn pd-cart">Add To Cart</a>
+                                            <a href="#" class="primary-btn pd-cart" @click="saveCart(detailProduct.id, detailProduct.name, detailProduct.galleries[0].photo, detailProduct.price)">Add To Cart</a>
                                         </router-link>
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
             return {
                 detailProduct: [],
                 default_img: '',
-                thumbs: [],
+                userCart: []
             }
         },
         methods: {
@@ -93,10 +93,27 @@
                 this.detailProduct = data;
                 // asumsi foto produk pertama upload adalah untuk thumbnail utama
                 this.default_img = data.galleries[0].photo;
-                this.thumbs = data.galleries;
             },
+            saveCart(idProduct, name, photo, price) {
+                var productAdded = {
+                    'id': idProduct,
+                    'name': name,
+                    'photo': photo,
+                    'price': price
+                }
+                this.userCart.push(productAdded);
+                const parsed = JSON.stringify(this.userCart);
+                localStorage.setItem('userCart', parsed);
+            }
         },
         mounted() {
+            if (localStorage.getItem('userCart')) {
+                try {
+                    this.userCart = JSON.parse(localStorage.getItem('userCart'));
+                } catch (error) {
+                    localStorage.removeItem('userCart');
+                }
+            }
             axios
                 .get('http://larashop.site/api/products', {
                     params: {
