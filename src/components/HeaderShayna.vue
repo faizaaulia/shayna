@@ -47,7 +47,7 @@
                                                                 <h6>{{ cart.name }}</h6>
                                                             </div>
                                                         </td>
-                                                        <td class="si-close" @click="removeItem(userCart.index)">
+                                                        <td class="si-close" @click="removeItem(cart.id)">
                                                             <i class="ti-close"></i>
                                                         </td>
                                                     </tr>
@@ -59,10 +59,12 @@
                                         </div>
                                         <div class="select-total">
                                             <span>total:</span>
-                                            <h5>$120.00</h5>
+                                            <h5>${{ totalPrice }}.00</h5>
                                         </div>
                                         <div class="select-button">
-                                            <a href="#" class="primary-btn view-card">VIEW CARD</a>
+                                            <router-link to="/cart" style="width:100%">
+                                                <a href="#" class="primary-btn view-card">VIEW CART</a>
+                                            </router-link>
                                             <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
                                         </div>
                                     </div>
@@ -78,17 +80,21 @@
 </template>
 
 <script>
+// import BannerShayna from './BannerShayna'
 export default {
     name: 'HeaderShayna',
     data() {
         return {
-            userCart: []
+            userCart: [],
         }
     },
     methods: {
-        removeItem(idx) {
-            this.userCart.splice(idx, 1);
-            // save newest cart
+        removeItem(itemId) {
+            let items = JSON.parse(localStorage.getItem('userCart'));
+            let item = items.map(item => item.id); // iterate for each item id
+            let index = item.findIndex(id => id == itemId); // find item where id == itemId
+            this.userCart.splice(index, 1); // delete item with id index
+            // save newes cart
             const parsed = JSON.stringify(this.userCart);
             localStorage.setItem('userCart', parsed);
         }
@@ -102,6 +108,13 @@ export default {
             }
         }
     },
+    computed: {
+        totalPrice() {
+            return this.userCart.reduce(function(items, data) {
+                return items + data.price;
+            }, 0);
+        }
+    }
 }
 </script>
 
