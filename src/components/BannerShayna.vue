@@ -10,11 +10,11 @@
                                 <div class="pi-pic">
                                     <img v-bind:src="itemProduct.galleries[0].photo" alt="" />
                                     <ul>
-                                        <!-- <router-link to="/cart"> -->
+                                        <router-link to="/cart">
                                             <li class="w-icon active" @click="saveCart(itemProduct.id, itemProduct.name, itemProduct.galleries[0].photo, itemProduct.price)">
                                                 <a href="#"><i class="icon_bag_alt"></i></a>
                                             </li>
-                                        <!-- </router-link> -->
+                                        </router-link>
                                         <li class="quick-view">
                                             <router-link v-bind:to="'/product/' + itemProduct.id">+ Quick View</router-link>
                                         </li>
@@ -63,12 +63,11 @@ export default {
                 'id': idProduct,
                 'name': name,
                 'photo': photo,
-                'price': parseInt(price)
+                'price': price
             }
             this.userCart.push(productAdded);
             const parsed = JSON.stringify(this.userCart);
             localStorage.setItem('userCart', parsed);
-            window.location.reload();
         }
     },
     mounted() {

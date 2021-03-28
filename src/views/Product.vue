@@ -45,9 +45,9 @@
                                         <h4>${{ detailProduct.price }}</h4>
                                     </div>
                                     <div class="quantity">
-                                        <!-- <router-link to="/cart"> -->
+                                        <router-link to="/cart">
                                             <a href="#" class="primary-btn pd-cart" @click="saveCart(detailProduct.id, detailProduct.name, detailProduct.galleries[0].photo, detailProduct.price)">Add To Cart</a>
-                                        <!-- </router-link> -->
+                                        </router-link>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,6 @@
     </div>
 </template>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     // @ is an alias to /src
     import HeaderShayna from '@/components/HeaderShayna.vue'
@@ -100,12 +99,11 @@
                     'id': idProduct,
                     'name': name,
                     'photo': photo,
-                    'price': parseInt(price)
+                    'price': price
                 }
                 this.userCart.push(productAdded);
                 const parsed = JSON.stringify(this.userCart);
                 localStorage.setItem('userCart', parsed);
-                window.location.reload();
             }
         },
         mounted() {
