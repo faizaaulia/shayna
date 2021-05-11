@@ -78,8 +78,7 @@ export default {
                 localStorage.removeItem('userCart');
             }
         }
-        axios
-            .get('http://larashop.site/api/products')
+        axios.get('http://127.0.0.1:8000/api/products')
             .then(res => (this.products = res.data.data.data))
             .catch(err => console.log(err));
     }

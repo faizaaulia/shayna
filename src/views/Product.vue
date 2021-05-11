@@ -115,7 +115,7 @@
                 }
             }
             axios
-                .get('http://larashop.site/api/products', {
+                .get('http://127.0.0.1:8000/api/products', {
                     params: {
                         id: this.$route.params.id
                     }

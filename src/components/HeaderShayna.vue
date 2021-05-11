@@ -47,7 +47,7 @@
                                                                 <h6>{{ cart.name }}</h6>
                                                             </div>
                                                         </td>
-                                                        <td class="si-close" @click="removeItem(userCart.index)">
+                                                        <td class="si-close" @click="removeItem(cart.index)">
                                                             <i class="ti-close"></i>
                                                         </td>
                                                     </tr>
@@ -59,10 +59,10 @@
                                         </div>
                                         <div class="select-total">
                                             <span>total:</span>
-                                            <h5>$120.00</h5>
+                                            <h5>${{ totalCart }}</h5>
                                         </div>
                                         <div class="select-button">
-                                            <a href="#" class="primary-btn view-card">VIEW CARD</a>
+                                            <a href="#" class="primary-btn view-card">VIEW CART</a>
                                             <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
                                         </div>
                                     </div>
@@ -82,21 +82,25 @@ export default {
     name: 'HeaderShayna',
     data() {
         return {
-            userCart: []
+            userCart: [],
+            totalCart: 0
         }
     },
     methods: {
         removeItem(idx) {
+            // TODO: fix missmatch item removing
             this.userCart.splice(idx, 1);
             // save newest cart
             const parsed = JSON.stringify(this.userCart);
             localStorage.setItem('userCart', parsed);
+            this.totalCart = this.userCart.reduce((acc, item) => acc + item.price, 0)
         }
     },
     mounted() {
         if (localStorage.getItem('userCart')) {
             try {
                 this.userCart = JSON.parse(localStorage.getItem('userCart'));
+                this.totalCart = this.userCart.reduce((acc, item) => acc + item.price, 0)
             } catch (error) {
                 localStorage.removeItem('userCart');
             }
